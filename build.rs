@@ -14,6 +14,12 @@ use std::io::Write;
 use std::path::PathBuf;
 
 fn main() {
+    cc::Build::new()
+        .file("./c/num/num.c")
+        .file("./c/num/num_ext.c")
+        .include("./c/num")
+        .compile("num");
+
     // Put `memory.x` in our output directory and ensure it's
     // on the linker search path.
     let out = &PathBuf::from(env::var_os("OUT_DIR").unwrap());

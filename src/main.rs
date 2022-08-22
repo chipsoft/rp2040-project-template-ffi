@@ -23,6 +23,10 @@ use bsp::hal::{
     watchdog::Watchdog,
 };
 
+extern "C" {
+    fn get_num(num: u32) -> u32;
+}
+
 #[entry]
 fn main() -> ! {
     info!("Program start");
@@ -63,6 +67,9 @@ fn main() -> ! {
         info!("off!");
         led_pin.set_low().unwrap();
         delay.delay_ms(500);
+        unsafe {
+            info!("Num = {}", get_num(50));
+        }
     }
 }
 
