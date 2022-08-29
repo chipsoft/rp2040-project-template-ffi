@@ -3,13 +3,17 @@
 //! This will blink an LED attached to GP25, which is the pin the Pico uses for the on-board LED.
 #![no_std]
 #![no_main]
+#![feature(alloc_error_handler)] // at the top of the file
+#![feature(linked_list_cursors)]
 
+use async_std::future;
+use async_std::task;
 use bsp::entry;
-use defmt::*;
+use defmt::{info, panic};
 use defmt_rtt as _;
 use embedded_hal::digital::v2::OutputPin;
 use embedded_time::fixed_point::FixedPoint;
-use panic_probe as _;
+use panic_probe as _; // <- async runtime
 
 // Provide an alias for our BSP so we can switch targets quickly.
 // Uncomment the BSP you included in Cargo.toml, the rest of the code does not need to change.
@@ -22,6 +26,18 @@ use bsp::hal::{
     sio::Sio,
     watchdog::Watchdog,
 };
+
+extern crate alloc;
+
+use alloc_cortex_m::CortexMHeap;
+
+#[global_allocator]
+static ALLOCATOR: CortexMHeap = CortexMHeap::empty();
+
+#[alloc_error_handler]
+fn alloc_error_handler(layout: alloc::alloc::Layout) -> ! {
+    panic!("allocation error: {:?}", layout)
+}
 
 extern "C" {
     fn get_num(num: u32) -> u32;
@@ -59,6 +75,11 @@ fn main() -> ! {
     );
 
     let mut led_pin = pins.led.into_push_pull_output();
+
+    // task::block_on(async { loop {} });
+    // async_std::task.spawn();
+    // let handle = task::spawn(async { 1 + 2 });
+    // task:: ::block_on();
 
     loop {
         info!("on!");

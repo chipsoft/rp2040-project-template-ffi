@@ -4,17 +4,21 @@ name = "rp2040-project-template"
 version = "0.1.0"
 
 [dependencies]
+async-std = {version = "1.12.0", default-features = false, features = ["alloc", "attributes"] }
 cortex-m = "0.7"
 cortex-m-rt = "0.7"
 embedded-hal = { version = "0.2.5", features = ["unproven"] }
 embedded-time = "0.12"
+alloc-cortex-m = "0.4.2"
 
 defmt = "0.3"
 defmt-rtt = "0.3"
 panic-probe = { version = "0.3", features = ["print-defmt"] }
+panic-halt= "0.2.0"
 
 # We're using a Pico by default on this template
 rp-pico = "0.4"
+# async-std = "1.12.0"
 
 # but you can use any BSP. Uncomment this to use the pro_micro_rp2040 BSP instead
 # sparkfun-pro-micro-rp2040 = "0.3"
@@ -22,6 +26,11 @@ rp-pico = "0.4"
 # If you're not going to use a Board Support Package you'll need these:
 # rp2040-hal = { version="0.5", features=["rt"] }
 # rp2040-boot2 = "0.2"
+
+# [dependencies.async-std]
+# version = "1.7.0"
+# default-features = false
+# features = ["alloc"]
 
 # cargo build/run
 [profile.dev]
